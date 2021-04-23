@@ -52,10 +52,10 @@ class UserRepository{
 
 //Comparing user input password with saved password
 async comparePasswords(saved, supplied){
-  const [buf, salt] = saved.split('.');
+  const [hashed, salt] = saved.split('.');
   const hashedSupplied = await scrypt(supplied,salt, 64);
 
-  return buf === hashedSupplied.toString('hex');
+  return hashed === hashedSupplied.toString('hex');
 }
 
 //Writes all users to a users.json file
