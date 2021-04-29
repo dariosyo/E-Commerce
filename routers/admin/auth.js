@@ -1,8 +1,9 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+
+const { handleErrors} = require('./middlewares');
 const usersRepo = require('../../repositories/users');
-const signinTemplet = require('../../views/admin/auth/signin');
-const signupTemplet = require('../../views/admin/auth/signup');
+const signinTemplate = require('../../views/admin/auth/signin');
+const signupTemplate = require('../../views/admin/auth/signup');
 const { requireEmail,
         requirePassword,
         requirePasswordConfirmation,
@@ -13,7 +14,7 @@ const { requireEmail,
 const router = express.Router();
 
       router.get('/signup', (req, res) => {
-        res.send(signupTemplet({req}));
+        res.send(signupTemplate({req}));
       });
 
       // Sign up congig
@@ -22,20 +23,16 @@ const router = express.Router();
         requireEmail,
         requirePassword,
         requirePasswordConfirmation
-      ],
-      async (req, res) => {
-          const errors = validationResult(req);
-          console.log(errors);
-          if(!errors.isEmpty()){
-            return res.send(signupTemplet({ req, errors }));
-          }
+      ], handleErrors(signupTemplate) ,
+            async (req, res) => {
+
           const { email, password, passwordConfirmation } = req.body;
 
           const user = await usersRepo.create({ email, password }); //({ email: email, password: password});
 
         req.session.userId = user.id; // Store the ID of that user inside users cookie
+        res.redirect('/admin/products');
 
-        res.send('Account created');
       });
 
       router.get('/signoff', (req, res) => {
@@ -45,28 +42,23 @@ const router = express.Router();
 
       router.get('/signin', (req, res) => {
 
-        res.send(signinTemplet({}));
+        res.send(signinTemplate({}));
       });
 
       router.post('/signin',
         [
           requireEmailExsiting,
           requireValidPasswordForUser
-        ],
+        ], handleErrors(signinTemplate),
           async (req, res) => {
-
-          const errors = validationResult(req);
-          if(!errors.isEmpty()){
-            return res.send(signinTemplet({ errors }))
-          }
-
 
           const { email } = req.body;
         const user = await usersRepo.getOneBy({ email });
 
         req.session.userId = user.id;
 
-        res.send("You are logged in");
+        res.redirect('/admin/products');
+
       });
 
   module.exports = router;
