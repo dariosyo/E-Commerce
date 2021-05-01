@@ -1,16 +1,16 @@
 const layout = require('../layout');
 
 module.exports = ({ items }) => {
-  // let totalPrice = 0;
-  // for (let item of items) {
-  //   totalPrice += item.quantity * item.product.price;
-  // }
+  let totalPrice = 0;
+  for (let item of items) {
+    totalPrice += item.quantity * item.product.price;
+  }
 
 //********* another way of calculating total Price **************
 
-const totalPrice = items.reduce((prev, item) => {
-  return prev + item.quantity * item.product.price;
-}, 0);
+// const totalPrice = items.reduce((prev, item) => {
+//   return prev + item.quantity * item.product.price;
+// }, 0);
 
   const renderedItems = items
     .map(item => {
@@ -55,7 +55,9 @@ const totalPrice = items.reduce((prev, item) => {
                 Total
               </div>
               <h1 class="title">$${totalPrice}</h1>
-              <button class="button is-primary">Buy</button>
+              <form method="POST" action="/cart/products/confiramtion">
+                <button class="button is-primary">Buy</button>
+              </form>
             </div>
           </div>
           <div class="column"></div>

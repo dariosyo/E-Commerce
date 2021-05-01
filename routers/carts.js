@@ -2,6 +2,7 @@ const express = require('express');
 const cartsRepo = require('../repositories/carts');
 const productsRepo = require('../repositories/products');
 const cartShowTemplate = require('../views/carts/show');
+const confirmationTemplate = require('../views/carts/confirmation');
 
 const router = express.Router();
 
@@ -59,6 +60,14 @@ router.post('/cart/products/delete', async (req, res) => {
   await cartsRepo.update(req.session.cartId, { items });
 
   res.redirect('/cart');
+});
+
+router.get('/confirmation', (req, res) =>{
+  res.send(confirmationTemplate({}));
+})
+
+router.post('/cart/products/confiramtion', (req, res) => {
+  res.redirect('/confirmation');
 });
 
 module.exports = router;

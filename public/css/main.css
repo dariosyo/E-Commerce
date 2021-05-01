@@ -10,7 +10,9 @@ body {
   text-align: center;
   padding: 5px;
 }
-
+.confirm{
+  color: green;
+}
 .navbar ul.social {
   display: flex;
 }
@@ -143,4 +145,8 @@ body {
 .cart-right {
   display: flex;
   align-items: center;
+}
+.titleCenter {
+  text-align: center;
+  font-size: 21px;
 }
